@@ -7,11 +7,11 @@ function M.create(blames)
     local content = {}
     for _, blame in pairs(blames) do
         table.insert(content,
-            blame["hash"] .. " " ..
-            blame["user"] .. " " ..
-            blame["date"] .. " " ..
-            blame["time"] .. " " ..
-            blame["timezone"]
+            blame.hash .. " " ..
+            blame.user .. " " ..
+            blame.date .. " " ..
+            blame.time .. " " ..
+            blame.timezone
         )
     end
     api.nvim_buf_set_lines(buf, 0, -1, false, content)

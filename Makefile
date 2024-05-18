@@ -1,7 +1,7 @@
-all: lint
+all: lint test
 
 lint:
 	luacheck --config .luacheckrc .
 
-unit:
+test:
 	lua tests/init.lua -v
