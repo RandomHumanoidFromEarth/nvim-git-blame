@@ -5,7 +5,7 @@ local api = vim.api
 function M.create(blames)
     local buf = api.nvim_create_buf(true, true)
     local content = {}
-    for blame in pairs(blames) do
+    for _, blame in pairs(blames) do
         table.insert(content,
             blame["hash"] .. " " ..
             blame["user"] .. " " ..
