@@ -10,7 +10,7 @@ end
 local function parse(output)
     local blames = {}
     for line in output:gmatch("([^\n]+)\n?") do
-        local hash, user, date, time, timezone = line:match("^(%S+)%s.(.-)%s([-%d]-)%s(%d-:%d-:%d-)%s(.-)%s")
+        local hash, user, date, time, timezone = line:match("^(%S+)%s.-%((.-)%s([-%d]-)%s(%d-:%d-:%d-)%s(.-)%s")
         local commit = {}
         commit.hash = hash
         commit.user = user
