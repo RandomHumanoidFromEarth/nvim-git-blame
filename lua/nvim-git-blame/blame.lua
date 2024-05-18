@@ -8,10 +8,8 @@ local function blame(filename)
 end
 
 local function parse(output)
-    
     local index = 0
     local blames = {}
-        
     for line in output:gmatch("([^\n]*)\n?") do
         local hash, user, date, time, timezone = line:match("^(%S+)%s.(.-)%s([-%d]-)%s(%d-:%d-:%d-)%s(.-)%s")
         if nil == hash then

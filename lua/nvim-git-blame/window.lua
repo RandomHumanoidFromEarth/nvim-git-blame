@@ -1,11 +1,9 @@
 local M = {}
 
---   config > --
 local resize = 60
 function M.set_width(width)
     resize = width
 end
--- < config   --
 
 local api = vim.api
 local win
@@ -15,7 +13,7 @@ function M.open(buffer)
     buf = buffer
     vim.cmd('vsplit')
     win = api.nvim_get_current_win()
-    vim.cmd("vertical resize " .. resize) 
+    vim.cmd("vertical resize " .. resize)
     api.nvim_win_set_buf(win, buf)
 end
 
