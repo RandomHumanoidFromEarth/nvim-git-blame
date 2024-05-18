@@ -23,7 +23,6 @@ local function open_blame()
     local current_buffer = api.nvim_get_current_buf()
     local file = api.nvim_buf_get_name(current_buffer)
     local blames = blame.blame(file)
-    print(blames[0]["user"])
     local buf = buffer.create(blames)
     window.open(buf)
 end
