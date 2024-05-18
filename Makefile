@@ -4,4 +4,4 @@ lint:
 	luacheck --config .luacheckrc .
 
 unit:
-	lua tests/init.lua -v -e -s -f
+	lua tests/init.lua -v
