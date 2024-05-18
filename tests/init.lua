@@ -1,3 +1,6 @@
+-- export modules for testing
+_G._TEST = true
+
 -- search *.lua files
 local handle = io.popen('find tests -type f -name "*.lua"')
 local out = handle:read('*a')

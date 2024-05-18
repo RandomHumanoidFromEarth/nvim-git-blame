@@ -28,6 +28,10 @@ function Blame.blame(filepath)
     return parse(out)
 end
 
+if _G._TEST then
+    Blame._parse = parse
+end
+
 return Blame
 
 

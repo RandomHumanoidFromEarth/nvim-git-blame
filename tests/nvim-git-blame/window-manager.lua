@@ -28,4 +28,3 @@ function TestWindowManager:testWindowList()
     test.assertEquals(4, set.buf_code)
 end
 
-test.LuaUnit.run()
