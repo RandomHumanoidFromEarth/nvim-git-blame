@@ -20,4 +20,23 @@ function WindowManager:get(buf_id)
     return nil
 end
 
+function WindowManager:remove(buf_id)
+    for i, item in pairs(self.win_map) do
+        if buf_id == item.buf_blame then
+            table.remove(self.win_map, i)
+            -- return
+        end
+        if buf_id == item.buf_code then
+            table.remove(self.win_map, i)
+            -- return
+        end
+    end
+end
+
+if _G._TEST then
+    function WindowManager:reset()
+        self.win_map = {}
+    end
+end
+
 return WindowManager
