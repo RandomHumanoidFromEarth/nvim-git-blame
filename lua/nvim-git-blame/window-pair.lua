@@ -8,11 +8,11 @@ function WindowPair:new(win_1, win_2)
     return pair
 end
 
-function WindowPair:contains(win)
-    if win == self.win_1 then
+function WindowPair:hasBufferId(win_id)
+    if win == self.win_1:getBufferId() then
         return true
     end
-    if win == self._win_2 then
+    if win == self.win_2:getBufferId() then
         return true
     end
     return false

@@ -58,7 +58,19 @@ local function toggle()
     close()
 end
 
--- add autocmd remove pair on close / maybe handle close buffer
+-- TODO: handle user closed window / buffer -> close it
+api.nvim_create_autocmd({'BufEnter'}, {
+    callback = function(ev)
+        local all = wm:getAll()
+        for _, pair in pairs(all) do
+            if pair:hasBufferId(ev.buf) then
+                pair:scrollBind(true)
+            else
+                pair:scrollBind(false)
+            end
+        end
+    end
+})
 api.nvim_create_user_command("GitBlameOpen", open, {})
 api.nvim_create_user_command("GitBlameClose", close, {})
 api.nvim_create_user_command("GitBlameToggle", toggle, {})

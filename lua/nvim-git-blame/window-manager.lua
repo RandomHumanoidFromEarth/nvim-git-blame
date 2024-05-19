@@ -55,5 +55,9 @@ function WindowManager:removePairByWindowId(win_id)
     end
 end
 
+function WindowManager:getAll()
+    return self.pairs
+end
+
 return WindowManager
 
