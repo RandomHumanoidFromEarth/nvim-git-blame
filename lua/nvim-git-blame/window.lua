@@ -28,32 +28,32 @@ function Window:setWidth(w)
 end
 
 function Window:verticalResize()
-   local current = api.nvim_get_current_win()
-   api.nvim_set_current_win(self.win)
-   vim.cmd('vertical resize 60')
-   api.nvim_set_current_win(current)
+    local current = api.nvim_get_current_win()
+    api.nvim_set_current_win(self.win)
+    vim.cmd('vertical resize ' .. self.width)
+    api.nvim_set_current_win(current)
 end
 
 function Window:scrollBind(bind)
-   local current = api.nvim_get_current_win()
-   api.nvim_set_current_win(self.win)
-   if bind then
-       vim.cmd('set scrollbind')
-   else
-       vim.cmd('set noscrollbind')
-   end
-   api.nvim_set_current_win(current)
+    local current = api.nvim_get_current_win()
+    api.nvim_set_current_win(self.win)
+    if bind then
+        vim.cmd('set scrollbind')
+    else
+        vim.cmd('set noscrollbind')
+    end
+    api.nvim_set_current_win(current)
 end
 
 function Window:readonly(readonly)
 local current = api.nvim_get_current_win()
-   api.nvim_set_current_win(self.win)
-   if readonly then
-       vim.cmd('set readonly')
-   else
-       vim.cmd('set noreadonly')
-   end
-   api.nvim_set_current_win(current)
+    api.nvim_set_current_win(self.win)
+    if readonly then
+        vim.cmd('set readonly')
+    else
+        vim.cmd('set noreadonly')
+    end
+    api.nvim_set_current_win(current)
 end
 
 return Window
