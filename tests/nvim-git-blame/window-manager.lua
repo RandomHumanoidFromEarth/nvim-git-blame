@@ -4,40 +4,46 @@ TestWindowManager = {}
 
 function TestWindowManager:setUp()
     self.window_manager = require '../../lua/nvim-git-blame/window-manager'
+    self.window_1 = nil
+    self.window_2 = nil
+end
+
+function TestWindowManager:reset()
+    local window_1 = {}
+    function window_1.getBuffer()
+        return 1
+    end
+    function window_1.getCodeBuffer()
+        return 2
+    end
+    local window_2 = {}
+    function window_2.getBuffer()
+        return 3
+    end
+    function window_2.getCodeBuffer()
+        return 4
+    end
+    self.window_1 = window_1
+    self.window_2 = window_2
+    self.window_manager._reset()
+    self.window_manager:add(self.window_1)
+    self.window_manager:add(self.window_2)
 end
 
 function TestWindowManager:testGet()
-    self.window_manager:reset()
-    local set
-    self.window_manager:add(1, 2)
-    self.window_manager:add(3, 4)
-    -- first set, window is blame
-    set = self.window_manager:get(1)
-    test.assertEquals(set.buf_blame, 1)
-    test.assertEquals(set.buf_code, 2)
-    -- first set, window is code
-    set = self.window_manager:get(2)
-    test.assertEquals(set.buf_blame, 1)
-    test.assertEquals(set.buf_code, 2)
-    -- second set, window is blame
-    set = self.window_manager:get(3)
-    test.assertEquals(set.buf_blame, 3)
-    test.assertEquals(set.buf_code, 4)
-    -- second set, window is code
-    set = self.window_manager:get(4)
-    test.assertEquals(set.buf_blame, 3)
-    test.assertEquals(set.buf_code, 4)
+    self:reset()
+    test.assertEquals(self.window_manager:get(1), self.window_1)
+    test.assertEquals(self.window_manager:get(2), self.window_1)
+    test.assertEquals(self.window_manager:get(3), self.window_2)
+    test.assertEquals(self.window_manager:get(4), self.window_2)
 end
 
 function TestWindowManager:testRemove()
-    self.window_manager:reset()
-    self.window_manager:add(1, 2)
-    self.window_manager:add(3, 4)
+    self:reset()
     self.window_manager:remove(3)
     test.assertNil(self.window_manager:get(3), nil)
     test.assertNil(self.window_manager:get(4), nil)
-    local set = self.window_manager:get(1)
-    test.assertEquals(1, set.buf_blame)
-    test.assertEquals(2, set.buf_code)
+    test.assertEquals(self.window_manager:get(1), self.window_1)
+    test.assertEquals(self.window_manager:get(2), self.window_1)
 end
 

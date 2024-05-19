@@ -3,40 +3,63 @@ local M = {}
 local api = vim.api
 local blame = require 'nvim-git-blame/blame'
 local buffer = require 'nvim-git-blame/buffer'
-local window = require 'nvim-git-blame/window'
+local Window = require 'nvim-git-blame/window'
+local WindowPair = require 'nvim-git-blame/window-pair'
+local wm = require 'nvim-git-blame/window-manager'
 
 function M.setup(config)
     if nil == config then
         return
     end
-    if config.width then
-        window.set_width(config.width)
-    end
+    -- no configuration yet
 end
 
--- TODO:
--- parallel scrolling in both windows
--- open more than one window :split and both can scroll
--- format date-time option (or add timezone)
-
-local function open_blame()
+local function open()
+    -- current window
     local current_buffer = api.nvim_get_current_buf()
+    local current_window = api.nvim_get_current_win()
+    local window_code = Window:new(current_window, current_buffer, false)
+    -- create blame buffer
     local file = api.nvim_buf_get_name(current_buffer)
     local blames = blame.blame(file)
-    local buf = buffer.create(blames)
-    window.open(buf)
+    local buf = buffer.createFromBlames(blames)
+    -- open new window
+    vim.cmd('vsplit')
+    local win = api.nvim_get_current_win()
+    api.nvim_win_set_buf(win, buf)
+    local window_blame = Window:new(win, buf, true)
+    window_blame:readonly(true)
+    window_blame:verticalResize()
+    local pair = WindowPair:new(window_blame, window_code)
+    pair:scrollBind(true)
+    wm:addPair(pair)
+end
+
+local function close()
+    local current_win = api.nvim_get_current_win()
+    local pair = wm:getPairByWindowId(current_win)
+    if nil == pair then
+        return
+    end
+    pair:scrollBind(false)
+    api.nvim_win_close(pair:getManagedWindow():getWindowId(), true)
+    api.nvim_set_current_win(pair:getUnmanagedWindow():getWindowId())
+    wm:removePairByWindowId(pair.win_1:getWindowId())
 end
 
 local function toggle()
-    if window.is_open() then
-        window.close()
+    local current_win = api.nvim_get_current_win()
+    local pair = wm:getPairByWindowId(current_win)
+    if nil == pair then
+        open()
         return
     end
-    open_blame()
+    close()
 end
 
-api.nvim_create_user_command("GitBlameOpen", open_blame, {})
-api.nvim_create_user_command("GitBlameClose", window.close, {})
+-- add autocmd remove pair on close / maybe handle close buffer
+api.nvim_create_user_command("GitBlameOpen", open, {})
+api.nvim_create_user_command("GitBlameClose", close, {})
 api.nvim_create_user_command("GitBlameToggle", toggle, {})
 
 return M

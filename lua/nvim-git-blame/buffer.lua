@@ -1,8 +1,7 @@
-local M = {}
-
+local Buffer = {}
 local api = vim.api
 
-function M.create(blames)
+function Buffer.createFromBlames(blames)
     local buf = api.nvim_create_buf(true, true)
     local content = {}
     for _, blame in pairs(blames) do
@@ -18,4 +17,4 @@ function M.create(blames)
     return buf
 end
 
-return M
+return Buffer

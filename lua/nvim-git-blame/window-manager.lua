@@ -1,42 +1,59 @@
 local WindowManager = {}
-WindowManager.win_map = {}
+WindowManager.pairs = {}
 
-function WindowManager:add(buf_blame, buf_code)
-    table.insert(self.win_map, {
-        buf_blame = buf_blame,
-        buf_code = buf_code
-    })
+function WindowManager:addPair(window_pair)
+    table.insert(self.pairs, window_pair)
 end
 
-function WindowManager:get(buf_id)
-    for _, item in pairs(self.win_map) do
-        if buf_id == item.buf_blame then
+function WindowManager:getPairByBufferId(buf_id)
+    for _, item in pairs(self.pairs) do
+        if item.win_1:getBufferId() == buf_id then
             return item
         end
-        if buf_id == item.buf_code then
+        if item.win_2:getBufferId() == buf_id then
             return item
         end
     end
     return nil
 end
 
-function WindowManager:remove(buf_id)
-    for i, item in pairs(self.win_map) do
-        if buf_id == item.buf_blame then
-            table.remove(self.win_map, i)
-            -- return
+function WindowManager:getPairByWindowId(win_id)
+    for _, item in pairs(self.pairs) do
+        if item.win_1:getWindowId() == win_id then
+            return item
         end
-        if buf_id == item.buf_code then
-            table.remove(self.win_map, i)
-            -- return
+        if item.win_2:getWindowId() == win_id then
+            return item
         end
     end
 end
 
-if _G._TEST then
-    function WindowManager:reset()
-        self.win_map = {}
+function WindowManager:removePairByBufferId(buf_id)
+    for _, item in pairs(self.pairs) do
+        if item.win_1:getBufferId() == buf_id then
+            table.remove(self.pairs, _)
+            return
+        end
+        if item.win_2:getBufferId() == buf_id then
+            table.remove(self.pairs, _)
+            return
+        end
+    end
+    return nil
+end
+
+function WindowManager:removePairByWindowId(win_id)
+    for _, item in pairs(self.pairs) do
+        if item.win_1:getWindowId() == win_id then
+            table.remove(self.pairs, _)
+            return
+        end
+        if item.win_2:getWindowId() == win_id then
+            table.remove(self.pairs, _)
+            return
+        end
     end
 end
 
 return WindowManager
+
