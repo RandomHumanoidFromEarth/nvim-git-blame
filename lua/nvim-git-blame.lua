@@ -43,9 +43,9 @@ local function close()
         return
     end
     pair:scrollBind(false)
+    wm:removePairByWindowId(pair.win_1:getWindowId())
     api.nvim_win_close(pair:getManagedWindow():getWindowId(), true)
     api.nvim_set_current_win(pair:getUnmanagedWindow():getWindowId())
-    wm:removePairByWindowId(pair.win_1:getWindowId())
 end
 
 local function toggle()
