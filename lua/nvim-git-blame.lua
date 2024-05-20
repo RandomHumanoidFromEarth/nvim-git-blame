@@ -26,14 +26,13 @@ local function open()
     -- open new window
     vim.cmd('vsplit')
     local win = api.nvim_get_current_win()
-    api.nvim_win_set_buf(win, buf:getBuffer())
     local window_blame = Window:new(win, buf:getBuffer(), true)
     window_blame:setWidth(buf:getMaxLen() + 5)
-    window_blame:readonly(true)
     window_blame:verticalResize()
     local pair = WindowPair:new(window_blame, window_code)
-    pair:scrollBind(true)
     wm:addPair(pair)
+    api.nvim_win_set_buf(win, buf:getBuffer())
+    window_blame:readonly(true)
 end
 
 local function close()
@@ -58,12 +57,13 @@ local function toggle()
     close()
 end
 
--- TODO: handle user closed window / buffer -> close it
 api.nvim_create_autocmd({'BufEnter'}, {
     callback = function(ev)
         local all = wm:getAll()
         for _, pair in pairs(all) do
+            pair:getManagedWindow():verticalResize()
             if pair:hasBufferId(ev.buf) then
+                pair:sync()
                 pair:scrollBind(true)
             else
                 pair:scrollBind(false)
@@ -71,6 +71,7 @@ api.nvim_create_autocmd({'BufEnter'}, {
         end
     end
 })
+
 api.nvim_create_user_command("GitBlameOpen", open, {})
 api.nvim_create_user_command("GitBlameClose", close, {})
 api.nvim_create_user_command("GitBlameToggle", toggle, {})

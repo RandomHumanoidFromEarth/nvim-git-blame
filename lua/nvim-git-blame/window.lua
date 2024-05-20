@@ -28,10 +28,7 @@ function Window:setWidth(w)
 end
 
 function Window:verticalResize()
-    local current = api.nvim_get_current_win()
-    api.nvim_set_current_win(self.win)
-    vim.cmd('vertical resize ' .. self.width)
-    api.nvim_set_current_win(current)
+    api.nvim_win_set_width(self.win, self.width)
 end
 
 function Window:scrollBind(bind)
@@ -57,29 +54,4 @@ local current = api.nvim_get_current_win()
 end
 
 return Window
-
---function M.open(buffer)
---    buf = buffer
---    vim.cmd('vsplit')
---    win = api.nvim_get_current_win()
---    vim.cmd("vertical resize " .. resize)
---    api.nvim_win_set_buf(win, buf)
---end
---
---function M.close()
---    if nil ~= win then
---        api.nvim_win_close(win, false)
---        win = nil
---    end
---    if nil ~= buf then
---        api.nvim_buf_delete(buf, {force=true})
---        buf = nil
---    end
---end
---
---function M.is_open()
---    return nil ~= win
---end
---
---return M
 
