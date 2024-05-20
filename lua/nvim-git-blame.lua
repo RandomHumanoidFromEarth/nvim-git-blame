@@ -41,8 +41,9 @@ local function close()
     if nil == pair then
         return
     end
-    pair:scrollBind(false)
+    -- remove pair before trigger autocmd - manual handling
     wm:removePairByWindowId(pair.win_1:getWindowId())
+    pair:scrollBind(false)
     api.nvim_win_close(pair:getManagedWindow():getWindowId(), true)
     api.nvim_set_current_win(pair:getUnmanagedWindow():getWindowId())
 end
