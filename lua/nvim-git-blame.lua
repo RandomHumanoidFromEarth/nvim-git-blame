@@ -24,16 +24,20 @@ function M.setup(config)
 end
 
 local function open()
+    local current_buffer = api.nvim_get_current_buf()
+    local file = api.nvim_buf_get_name(current_buffer)
+    if false == git.isFile(file) then
+        print('file not found')
+        return
+    end
     if false == git.isGit() then
         print('not a git repository')
         return
     end
     -- current window
-    local current_buffer = api.nvim_get_current_buf()
     local current_window = api.nvim_get_current_win()
     local window_code = Window:new(current_window, current_buffer, false)
     -- create blame buffer
-    local file = api.nvim_buf_get_name(current_buffer)
     local blames = git.blame(file)
     local buf = buffer:createFromBlames(blames)
     -- open new window
