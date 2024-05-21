@@ -1,7 +1,6 @@
 local M = {}
 
 -- TODO: handle wrapped lines
--- TODO: handle not a written file
 -- TODO: handle close with :q
 -- TODO: handle removing buffers from nvim_list_bufs()
 -- TODO: handle open win from open blame without scrollbind
@@ -58,11 +57,15 @@ local function close()
     if nil == pair then
         return
     end
-    -- remove pair before trigger autocmd - manual handling
-    wm:removePairByWindowId(pair.win_1:getWindowId())
-    pair:scrollBind(false)
-    api.nvim_win_close(pair:getManagedWindow():getWindowId(), true)
-    api.nvim_set_current_win(pair:getUnmanagedWindow():getWindowId())
+    local managed_window = pair:getManagedWindow():getWindowId()
+    if wm.windowExists(managed_window) then
+        api.nvim_win_close(managed_window, true)
+        api.nvim_set_current_win(pair:getUnmanagedWindow():getWindowId())
+    end
+    --wm:removePairByWindowId(pair.win_1:getWindowId())
+    --pair:scrollBind(false)
+    --api.nvim_win_close()
+    --api.nvim_set_current_win(pair:getUnmanagedWindow():getWindowId())
 end
 
 local function toggle()
@@ -75,10 +78,18 @@ local function toggle()
     close()
 end
 
+
 api.nvim_create_autocmd({'BufEnter'}, {
     callback = function(ev)
         local all = wm:getAll()
         for _, pair in pairs(all) do
+            if false == wm.windowExists(pair:getManagedWindow():getWindowId()) then
+                pair:getUnmanagedWindow():scrollBind(false)
+                local b_buf = pair:getManagedWindow():getBufferId()
+                vim.cmd.bdelete(b_buf)
+                wm:removePairByWindowId(pair:getManagedWindow():getWindowId())
+                return
+            end
             pair:getManagedWindow():verticalResize()
             if pair:hasBufferId(ev.buf) then
                 pair:sync()

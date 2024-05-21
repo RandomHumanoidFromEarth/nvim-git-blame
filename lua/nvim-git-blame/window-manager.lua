@@ -1,5 +1,6 @@
 local WindowManager = {}
 WindowManager.pairs = {}
+local api = vim.api
 
 function WindowManager:addPair(window_pair)
     table.insert(self.pairs, window_pair)
@@ -53,6 +54,15 @@ function WindowManager:removePairByWindowId(win_id)
             return
         end
     end
+end
+
+function WindowManager.windowExists(win_id)
+    for _, w in pairs(api.nvim_list_wins()) do
+        if w == win_id then
+            return true
+        end
+    end
+    return false
 end
 
 function WindowManager:getAll()
