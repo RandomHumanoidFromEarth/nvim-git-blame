@@ -1,13 +1,10 @@
-local Blame = {}
+local Git = {}
 
-local function blame(filename)
+-- return { hash, user, date, time, timezone }
+function Git.blame(filename)
     local handle = io.popen("git blame " .. filename, "r")
     local output = handle:read("*a")
     handle:close()
-    return output
-end
-
-local function parse(output)
     local blames = {}
     for line in output:gmatch("([^\n]+)\n?") do
         local hash, user, date, time, timezone = line:match("^(%S+)%s.-%((.-)%s([-%d]-)%s(%d-:%d-:%d-)%s(.-)%s")
@@ -22,16 +19,17 @@ local function parse(output)
     return blames
 end
 
--- return { hash, user, date, time, timezone }
-function Blame.blame(filepath)
-    local out = blame(filepath)
-    return parse(out)
+function Git.isGit()
+    local handle = io.popen("git status 1>/dev/null 2>/dev/null; echo $?")
+    local output = handle:read("*a")
+    handle:close()
+    if '0\n' == output then
+        return true
+    end
+    print(output)
+    return false
 end
 
-if _G._TEST then
-    Blame._parse = parse
-end
-
-return Blame
+return Git
 
 

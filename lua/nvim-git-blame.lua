@@ -1,7 +1,16 @@
 local M = {}
 
+-- TODO: handle wrapped lines
+-- TODO: handle not a written file
+-- TODO: handle close with :q
+-- TODO: handle removing buffers from nvim_list_bufs()
+-- TODO: handle open win from open blame without scrollbind
+-- TODO: write tests
+-- TODO: manual testing
+-- TODO: update readme
+
 local api = vim.api
-local blame = require 'nvim-git-blame/blame'
+local git = require 'nvim-git-blame/git'
 local buffer = require 'nvim-git-blame/buffer'
 local Window = require 'nvim-git-blame/window'
 local WindowPair = require 'nvim-git-blame/window-pair'
@@ -15,13 +24,17 @@ function M.setup(config)
 end
 
 local function open()
+    if false == git.isGit() then
+        print('not a git repository')
+        return
+    end
     -- current window
     local current_buffer = api.nvim_get_current_buf()
     local current_window = api.nvim_get_current_win()
     local window_code = Window:new(current_window, current_buffer, false)
     -- create blame buffer
     local file = api.nvim_buf_get_name(current_buffer)
-    local blames = blame.blame(file)
+    local blames = git.blame(file)
     local buf = buffer:createFromBlames(blames)
     -- open new window
     vim.cmd('vsplit')
