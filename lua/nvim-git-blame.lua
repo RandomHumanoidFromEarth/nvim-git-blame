@@ -1,9 +1,6 @@
 local M = {}
 
 -- TODO: handle wrapped lines
--- TODO: handle close with :q
--- TODO: handle removing buffers from nvim_list_bufs()
--- TODO: handle open win from open blame without scrollbind
 -- TODO: write tests
 -- TODO: manual testing
 -- TODO: update readme
@@ -33,21 +30,15 @@ local function open()
         print('not a git repository')
         return
     end
-    -- current window
-    local current_window = api.nvim_get_current_win()
-    local window_code = Window:new(current_window, current_buffer, false)
-    -- create blame buffer
-    local blames = git.blame(file)
-    local buf = buffer:createFromBlames(blames)
-    -- open new window
+    local window_code = Window:new(api.nvim_get_current_win(), current_buffer, false)
     vim.cmd('vsplit')
-    local win = api.nvim_get_current_win()
-    local window_blame = Window:new(win, buf:getBuffer(), true)
+    local buf = buffer:createFromBlames(git.blame(file))
+    local window_blame = Window:new(api.nvim_get_current_win(), buf:getBuffer(), true)
     window_blame:setWidth(buf:getMaxLen() + 5)
     window_blame:verticalResize()
     local pair = WindowPair:new(window_blame, window_code)
     wm:addPair(pair)
-    api.nvim_win_set_buf(win, buf:getBuffer())
+    api.nvim_win_set_buf(window_blame:getWindowId(), buf:getBuffer())
     window_blame:readonly(true)
 end
 
@@ -62,10 +53,6 @@ local function close()
         api.nvim_win_close(managed_window, true)
         api.nvim_set_current_win(pair:getUnmanagedWindow():getWindowId())
     end
-    --wm:removePairByWindowId(pair.win_1:getWindowId())
-    --pair:scrollBind(false)
-    --api.nvim_win_close()
-    --api.nvim_set_current_win(pair:getUnmanagedWindow():getWindowId())
 end
 
 local function toggle()
