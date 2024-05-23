@@ -21,6 +21,17 @@ function M.setup(config)
 end
 
 local function open()
+
+
+    -- git blame the file
+    -- parse content
+    -- vsplit window
+    -- get width of unmanaged window
+    -- for parsed blame
+    --   width / buffer_get_line
+    --   times → add emty lines
+    --
+        
     local current_buffer = api.nvim_get_current_buf()
     local file = api.nvim_buf_get_name(current_buffer)
     if false == git.isFile(file) then
@@ -31,9 +42,10 @@ local function open()
         print('not a git repository')
         return
     end
-    local window_code = Window:new(api.nvim_get_current_win(), Buffer:new(current_buffer), false)
+    local code_buffer = Buffer:new(current_buffer)
+    local window_code = Window:new(api.nvim_get_current_win(), code_buffer, false)
     vim.cmd('vsplit')
-    local buf = blame_buffer:createFromBlames(git.blame(file))
+    local buf = blame_buffer:create(git.blame(file), code_buffer)
     local window_blame = Window:new(api.nvim_get_current_win(), Buffer:new(buf:getBuffer()), true)
     window_blame:setWidth(buf:getMaxLen() + 5)
     window_blame:verticalResize()

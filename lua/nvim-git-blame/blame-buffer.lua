@@ -1,7 +1,7 @@
 local BlameBuffer = {}
 local api = vim.api
 
-function BlameBuffer:createFromBlames(blames)
+function BlameBuffer:create(blames, code_buffer)
     local o = {}
     setmetatable(o, { __index = self })
     o.max_len = 0

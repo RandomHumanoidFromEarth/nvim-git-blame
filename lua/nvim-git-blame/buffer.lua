@@ -13,12 +13,8 @@ function Buffer:getId()
 end
 
 function Buffer:getLine(line_number)
-    local content = api.nvim_buf_get_lines(self.buf_id, 0, -1, true)
-    local lines = content:gmatch('([^\n]+)\n?')
-    if nil == lines[line_number] then
-        return nil
-    end
-    return lines[line_number]
+    local line = api.nvim_buf_get_lines(self.buf_id, line_number -1, line_number, true)
+    return line[1]
 end
 
 return Buffer
