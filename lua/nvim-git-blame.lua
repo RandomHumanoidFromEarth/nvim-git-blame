@@ -8,6 +8,7 @@ local M = {}
 local api = vim.api
 local git = require 'nvim-git-blame/git'
 local blame_buffer = require 'nvim-git-blame/blame-buffer'
+local Buffer = require 'nvim-git-blame/buffer'
 local Window = require 'nvim-git-blame/window'
 local WindowPair = require 'nvim-git-blame/window-pair'
 local wm = require 'nvim-git-blame/window-manager'
@@ -30,10 +31,10 @@ local function open()
         print('not a git repository')
         return
     end
-    local window_code = Window:new(api.nvim_get_current_win(), current_buffer, false)
+    local window_code = Window:new(api.nvim_get_current_win(), Buffer:new(current_buffer), false)
     vim.cmd('vsplit')
     local buf = blame_buffer:createFromBlames(git.blame(file))
-    local window_blame = Window:new(api.nvim_get_current_win(), buf:getBuffer(), true)
+    local window_blame = Window:new(api.nvim_get_current_win(), Buffer:new(buf:getBuffer()), true)
     window_blame:setWidth(buf:getMaxLen() + 5)
     window_blame:verticalResize()
     local pair = WindowPair:new(window_blame, window_code)

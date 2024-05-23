@@ -11,7 +11,7 @@ function Window:new(win, buf, managed)
 end
 
 function Window:getBufferId()
-    return self.buf
+    return self.buf:getId()
 end
 
 function Window:getWindowId()
