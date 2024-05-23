@@ -7,7 +7,7 @@ local M = {}
 
 local api = vim.api
 local git = require 'nvim-git-blame/git'
-local buffer = require 'nvim-git-blame/buffer'
+local blame_buffer = require 'nvim-git-blame/blame-buffer'
 local Window = require 'nvim-git-blame/window'
 local WindowPair = require 'nvim-git-blame/window-pair'
 local wm = require 'nvim-git-blame/window-manager'
@@ -32,7 +32,7 @@ local function open()
     end
     local window_code = Window:new(api.nvim_get_current_win(), current_buffer, false)
     vim.cmd('vsplit')
-    local buf = buffer:createFromBlames(git.blame(file))
+    local buf = blame_buffer:createFromBlames(git.blame(file))
     local window_blame = Window:new(api.nvim_get_current_win(), buf:getBuffer(), true)
     window_blame:setWidth(buf:getMaxLen() + 5)
     window_blame:verticalResize()
@@ -64,7 +64,6 @@ local function toggle()
     end
     close()
 end
-
 
 api.nvim_create_autocmd({'BufEnter'}, {
     callback = function(ev)

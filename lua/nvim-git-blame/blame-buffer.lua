@@ -1,7 +1,7 @@
-local Buffer = {}
+local BlameBuffer = {}
 local api = vim.api
 
-function Buffer:createFromBlames(blames)
+function BlameBuffer:createFromBlames(blames)
     local o = {}
     setmetatable(o, { __index = self })
     o.max_len = 0
@@ -24,12 +24,12 @@ function Buffer:createFromBlames(blames)
     return o
 end
 
-function Buffer:getBuffer()
+function BlameBuffer:getBuffer()
     return self.buffer
 end
 
-function Buffer:getMaxLen()
+function BlameBuffer:getMaxLen()
     return self.max_len
 end
 
-return Buffer
+return BlameBuffer
