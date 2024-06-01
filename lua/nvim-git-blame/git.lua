@@ -30,7 +30,7 @@ function Git.isGit()
 end
 
 function Git.isFile(filepath)
-    local handle = io.popen('head ' .. filepath .. ' >/dev/null 2>/dev/null; echo $?')
+    local handle = io.popen('head ' .. filepath .. ' 1>/dev/null 2>/dev/null; echo $?')
     local output = handle:read('*a')
     handle:close()
     if '0\n' == output then
