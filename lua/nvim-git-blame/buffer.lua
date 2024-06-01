@@ -17,4 +17,8 @@ function Buffer:getLine(line_number)
     return line[1]
 end
 
+function Buffer:getLines()
+    return api.nvim_buf_get_lines(self.buf_id, 0, -1, true)
+end
+
 return Buffer
