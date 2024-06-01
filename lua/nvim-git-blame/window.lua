@@ -14,6 +14,14 @@ function Window:getBufferId()
     return self.buf:getId()
 end
 
+function Window:getBuffer()
+    return self.buf
+end
+
+function Window:getWidth()
+    return api.nvim_win_get_width(self.win)
+end
+
 function Window:getWindowId()
     return self.win
 end
