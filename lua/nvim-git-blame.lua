@@ -1,9 +1,9 @@
 local M = {}
 
--- TODO: handle wrapped lines
+-- TODO: update on code window write buffer → blame again
 -- TODO: write tests
 -- TODO: manual testing
--- TODO: update readme
+-- TODO: update readmessssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
 
 local api = vim.api
 local git = require 'nvim-git-blame/git'
@@ -21,17 +21,6 @@ function M.setup(config)
 end
 
 local function open()
-
-
-    -- git blame the file
-    -- parse content
-    -- vsplit window
-    -- get width of unmanaged window
-    -- for parsed blame
-    --   width / buffer_get_line
-    --   times → add emty lines
-    --
-        
     local current_buffer = api.nvim_get_current_buf()
     local file = api.nvim_buf_get_name(current_buffer)
     if false == git.isFile(file) then
@@ -45,7 +34,7 @@ local function open()
     local code_buffer = Buffer:new(current_buffer)
     local window_code = Window:new(api.nvim_get_current_win(), code_buffer, false)
     vim.cmd('vsplit')
-    local buf = blame_buffer:create(git.blame(file), code_buffer)
+    local buf = blame_buffer:create(git.blame(file))
     local window_blame = Window:new(api.nvim_get_current_win(), Buffer:new(buf:getBuffer()), true)
     window_blame:setWidth(buf:getMaxLen() + 5)
     window_blame:verticalResize()
@@ -86,6 +75,7 @@ api.nvim_create_autocmd({'BufEnter'}, {
                 pair:getUnmanagedWindow():scrollBind(false)
                 local b_buf = pair:getManagedWindow():getBufferId()
                 vim.cmd.bdelete(b_buf)
+                vim.cmd.bdelete(pair:getOriginalBlameBuffer():getId())
                 wm:removePairByWindowId(pair:getManagedWindow():getWindowId())
                 return
             end
