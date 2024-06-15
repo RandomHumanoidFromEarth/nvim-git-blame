@@ -54,6 +54,7 @@ local function close()
     if wm.windowExists(managed_window) then
         api.nvim_win_close(managed_window, true)
         api.nvim_set_current_win(pair:getUnmanagedWindow():getWindowId())
+        vim.cmd("doautocmd BufEnter")
     end
 end
 
