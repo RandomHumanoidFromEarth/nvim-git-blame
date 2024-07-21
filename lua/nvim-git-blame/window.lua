@@ -18,6 +18,10 @@ function Window:getBuffer()
     return self.buf
 end
 
+function Window:setBuffer(buf)
+    self.buf = buf
+end
+
 function Window:getWidth()
     return api.nvim_win_get_width(self.win)
 end

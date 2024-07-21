@@ -1,4 +1,5 @@
 local BlameBuffer = {}
+
 local api = vim.api
 
 function BlameBuffer:create(blames)
