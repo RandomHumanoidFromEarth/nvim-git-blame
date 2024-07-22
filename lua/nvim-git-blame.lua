@@ -1,9 +1,5 @@
 local M = {}
--- TODO: update on code window write buffer → blame again
--- update does not handle wrapped lines
--- some error on close
 -- TODO: write tests
--- TODO: manual testing
 
 local api = vim.api
 local git = require 'nvim-git-blame/git'
@@ -39,6 +35,7 @@ local function open()
     window_blame:setWidth(buf:getMaxLen() + 5)
     window_blame:verticalResize()
     local pair = WindowPair:new(window_blame, window_code)
+    pair:addEmptyLinesToBlameBuffer()
     WindowManager:addPair(pair)
     api.nvim_win_set_buf(window_blame:getWindowId(), buf:getBuffer())
     window_blame:readonly(true)
@@ -95,7 +92,6 @@ api.nvim_create_autocmd({'BufEnter'}, {
     end
 })
 
--- update post-write buffer
 api.nvim_create_autocmd({'BufWritePost'}, {
     callback = function(ev)
         for _, pair in pairs(WindowManager:getAll()) do
@@ -117,6 +113,7 @@ api.nvim_create_autocmd({'BufWritePost'}, {
                 vim.cmd.bdelete(old_buf)
                 window_blame:setWidth(buf:getMaxLen() + 5)
                 window_blame:verticalResize()
+                pair:addEmptyLinesToBlameBuffer()
             end
         end
     end

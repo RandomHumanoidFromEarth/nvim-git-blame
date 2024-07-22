@@ -20,6 +20,24 @@ function WindowPair:sync()
     self:scrollBind(true)
 end
 
+-- you can only do this once
+-- otherwise: create new buffer, assign id to window, delete old buffer
+function WindowPair:addEmptyLinesToBlameBuffer()
+    local code_buf = self:getUnmanagedWindow():getBuffer()
+    local blame_buf = self:getManagedWindow():getBuffer()
+    local blame_buf_new = {}
+    for index, line in pairs(code_buf:getLines()) do
+        table.insert(blame_buf_new, blame_buf:getLine(index))
+        local wrapped = (string.len(line) / self:getUnmanagedWindow():getWidth()) - 1
+        if wrapped > 0 then
+            for _=0, wrapped do
+                table.insert(blame_buf_new, '')
+            end
+        end
+    end
+    api.nvim_buf_set_lines(blame_buf:getId(), 0, -1, true, blame_buf_new)
+end
+
 function WindowPair:hasBufferId(buf_id)
     if buf_id == self.win_1:getBufferId() then
         return true
