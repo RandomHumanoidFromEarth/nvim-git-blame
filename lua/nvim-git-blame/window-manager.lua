@@ -2,10 +2,6 @@ local WindowManager = {}
 WindowManager.pairs = {}
 local api = vim.api
 
-
-
-
-
 function WindowManager:addPair(window_pair)
     table.insert(self.pairs, window_pair)
 end

@@ -75,8 +75,12 @@ api.nvim_create_autocmd({'BufEnter'}, {
             if false == WindowManager.windowExists(pair:getManagedWindow():getWindowId()) then
                 pair:getUnmanagedWindow():scrollBind(false)
                 local b_buf = pair:getManagedWindow():getBufferId()
-                print("buffer Id: " .. b_buf)
                 vim.cmd.bdelete(b_buf)
+                WindowManager:removePairByWindowId(pair:getManagedWindow():getWindowId())
+                return
+            end
+            if false == WindowManager.windowExists(pair:getUnmanagedWindow():getWindowId()) then
+                pair:getManagedWindow():scrollBind(false)
                 WindowManager:removePairByWindowId(pair:getManagedWindow():getWindowId())
                 return
             end
