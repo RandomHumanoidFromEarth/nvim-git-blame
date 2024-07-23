@@ -1,5 +1,4 @@
 local M = {}
--- TODO: write tests
 
 local api = vim.api
 local git = require 'nvim-git-blame/git'

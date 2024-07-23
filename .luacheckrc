@@ -1,6 +1,5 @@
 globals = {
     'vim',
-    'TestWindowManager',
-    'TestBlame',
-    'TestBuffer'
+    'TestBuffer',
+    'TestGit',
 }

@@ -1,8 +1,8 @@
-local Git = {}
+local Git = { _io = io }
 
 -- return { hash, user, date, time, timezone }
 function Git.blame(filename)
-    local handle = io.popen('git blame ' .. filename, 'r')
+    local handle = Git._io.popen('git blame ' .. filename, 'r')
     local output = handle:read('*a')
     handle:close()
     local blames = {}
@@ -20,7 +20,7 @@ function Git.blame(filename)
 end
 
 function Git.isGit()
-    local handle = io.popen('git status 1>/dev/null 2>/dev/null; echo $?')
+    local handle = Git._io.popen('git status 1>/dev/null 2>/dev/null; echo $?', 'r')
     local output = handle:read('*a')
     handle:close()
     if '0\n' == output then
@@ -30,13 +30,19 @@ function Git.isGit()
 end
 
 function Git.isFile(filepath)
-    local handle = io.popen('head ' .. filepath .. ' 1>/dev/null 2>/dev/null; echo $?')
+    local handle = Git._io.popen('head ' .. filepath .. ' 1>/dev/null 2>/dev/null; echo $?', 'r')
     local output = handle:read('*a')
     handle:close()
     if '0\n' == output then
         return true
     end
     return false
+end
+
+if _G._TEST then
+    function Git.setIO(new)
+        Git._io = new
+    end
 end
 
 return Git
