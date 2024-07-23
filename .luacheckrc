@@ -4,4 +4,5 @@ globals = {
     'TestGit',
     'TestBlameBuffer',
     'TestWindow',
+    'TestWindowManager',
 }
