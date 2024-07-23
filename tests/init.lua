@@ -1,4 +1,3 @@
--- export modules for testing
 _G._TEST = true
 
 -- search *.lua files

@@ -1,41 +1,50 @@
-local test = require('luaunit')
+local unit = require('luaunit')
+vim = { api = {} }
+local Buffer = require '../../lua/nvim-git-blame/buffer'
 
-
--- mocking vim api
-local buf = 999
-local mock = {}
-function mock.nvim_create_buf(listed, scratch)
-    test.assertTrue(listed)
-    test.assertTrue(scratch)
-    return buf
-end
-function mock.nvim_buf_set_lines(bufid, start, endpos, strict_indexing, replace)
-    test.assertEquals(bufid, buf)
-    test.assertEquals(start, 0)
-    test.assertEquals(endpos, -1)
-    test.assertEquals(strict_indexing, false)
-    test.assertEquals({'db1a378 mosix 2024-05-18 17:49:11 +0200'}, replace)
-end
-
+-- this is the naming schema, class definition
 TestBuffer = {}
-function TestBuffer:setUp()
-    _G.vim = {}
-    _G.vim.api = mock
-    self.buffer= require '../../lua/nvim-git-blame/buffer'
-end
+
+--function TestBuffer:setUp()
+--end
 
 function TestBuffer.tearDown()
-    _G.vim = nil
+    vim.api = {}
 end
 
-function TestBuffer:testCreateFromParsed()
-    local blames = {}
-    table.insert(blames, {
-        hash = 'db1a378',
-        user = 'mosix',
-        date = '2024-05-18',
-        time = '17:49:11',
-        timezone = '+0200'
-    })
-    test.assertEquals(self.buffer.create(blames), buf)
+function TestBuffer.testCreationAndGetId()
+    local buf_1 = Buffer:new(0)
+    local buf_2 = Buffer:new(1)
+    unit.assertEquals(buf_1:getId(), 0)
+    unit.assertEquals(buf_2:getId(), 1)
 end
+
+function TestBuffer.TestGetLine()
+    vim.api.nvim_buf_get_lines = function (buffer, from, to, strict_indexing)
+        unit.assertEquals(buffer, 1001)
+        unit.assertEquals(from, to - 1)
+        unit.assertEquals(to, 15)
+        unit.assertEquals(strict_indexing, true)
+        return { "first line" }
+    end
+    local buf = Buffer:new(1001)
+    local line = buf:getLine(15)
+    unit.assertEquals("first line", line)
+end
+
+function TestBuffer.TestGetLines()
+    -- FIXME: function from TestGetLine (above test) is called
+    vim.api.nvim_buf_get_lines = function (buffer, from, to, strict_indexing)
+        unit.assertEquals(buffer, 1003)
+        unit.assertEquals(from, 0)
+        unit.assertEquals(to, -1)
+        unit.assertEquals(strict_indexing, true)
+        return { "line_1", "line_2", "line_3" }
+    end
+    local buf = Buffer:new(1003)
+    local lines = buf:getLines()
+    unit.assertEquals(lines[1], "line_1")
+    unit.assertEquals(lines[2], "line_2")
+    unit.assertEquals(lines[3], "line_3")
+end
+

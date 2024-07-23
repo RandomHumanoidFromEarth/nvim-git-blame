@@ -10,6 +10,6 @@ This will work after publishing it ...
 
 # Setup
 `sudo apt update && sudo apt install lua-check luarocks`
-`sudo luarocks install luaunit`
+`luarocks --local install luaunit`
 Now you can checkout the `Makefile`
 
