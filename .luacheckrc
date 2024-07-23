@@ -3,4 +3,5 @@ globals = {
     'TestBuffer',
     'TestGit',
     'TestBlameBuffer',
+    'TestWindow',
 }
