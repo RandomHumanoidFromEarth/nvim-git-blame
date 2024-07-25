@@ -12,11 +12,18 @@
     in with pkgs; {
       devShells.${system}.default = mkShell {
           buildInputs = with pkgs; [
-            gnumake
             lua
             luaPackages.luaunit
             luaPackages.luacheck
+            neovim
         ];
+        shellHook = ''
+            alias vim=nvim
+            alias was="git status --short"
+            alias lint="luacheck --config .luacheckrc ."
+            alias test="lua tests/init.lua -v"
+            export PS1="֍ \u:dev-shell → "
+          '';
       };
     };
 }
