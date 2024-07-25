@@ -1,19 +1,32 @@
 # nvim-git-blame
-This nvim-plugin has the purpose of being as simple as possible.
-Getting started with lua and nvim-plugins.
+This plugin opens a simple git blame view in split view.<br/>
+Good for getting started with lua and nvim-plugins.<br/>
 Open for improvements and contributions.
-Try avoid overhead.
 
-# Installation with Packer
-This will work after publishing it ...
-`use 'RandomHumanoidFromEarth/nvim-git-blame'`
+### Installation with Packer
+Under construction. For now do git checkout in packer directory `~/.local/share/nvim/site/pack/packer/start`.
 
-# Setup
-`sudo apt update && sudo apt install lua-check luarocks`
-`luarocks --local install luaunit`
-Now you can checkout the `Makefile`
+### Configuration
+```lua
+# ~/.config/nvim/init.lua
+vim.keymap.set('normal', '<C-b>', ':GitBlameToggle<CR>'
+```
+
+### Development
+
+On NixOS
+- Run `nix develop`
+- Use `lint` and `test` alias
+
+On Debian
+- `sudo apt update && sudo apt install lua-check luarocks`
+- `luarocks --local install luaunit`
+- lint: `luacheck --config .luacheckrc .`
+- test: `lua test/init.lua`
 
 # TODO
-- blame new file
-- check file is written 
+- testing: write a good mock for vim.api
+- rewrite tests
+- blame unversioned file
+- check buffer is written before "git blame filename"
 
