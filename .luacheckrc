@@ -5,4 +5,5 @@ globals = {
     'TestBlameBuffer',
     'TestWindow',
     'TestWindowManager',
+    'TestWindowPair',
 }
