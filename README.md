@@ -1,5 +1,5 @@
 # nvim-git-blame
-This plugin opens a simple git blame view in split view.<br/>
+This plugin opens a simple git blame in split view.<br/>
 Good for getting started with lua and nvim-plugins.<br/>
 Open for improvements and contributions.
 
@@ -16,7 +16,7 @@ vim.keymap.set('normal', '<C-b>', ':GitBlameToggle<CR>'
 
 On NixOS
 - Run `nix develop`
-- Use `lint` and `test` alias
+- Use `run-lint` and `run-test` alias
 
 On Debian
 - `sudo apt update && sudo apt install lua-check luarocks`

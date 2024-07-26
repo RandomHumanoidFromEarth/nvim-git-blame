@@ -20,8 +20,8 @@
         shellHook = ''
             alias vim=nvim
             alias was="git status --short"
-            alias lint="luacheck --config .luacheckrc ."
-            alias test="lua tests/init.lua -v"
+            alias run-lint="luacheck --config .luacheckrc ."
+            alias run-test="lua tests/init.lua -v"
             export PS1="\e[31m֍\e[0m \u::\W → "
           '';
       };
