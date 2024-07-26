@@ -1,74 +1,64 @@
 local unit = require 'luaunit'
 
--- mock: vim.api
-local ApiMock = {
-    current_win_id = nil,
-    expexted_resize = nil,
-    widths = {},
-    win_jumps = {},
-}
-function ApiMock:setExpectedResize(s)
-    self.expected_resize = s
-end
-function ApiMock:pretendWindowSize(win_id, s)
-    self.widths[win_id] = s
-end
-function ApiMock.nvim_win_get_width(win_id)
-    unit.assertEquals(win_id, ApiMock.current_win_id)
-    return ApiMock.widths[win_id]
-end
-function ApiMock.nvim_win_set_width(win_id, size)
-    unit.assertEquals(win_id, ApiMock.current_win_id)
-    unit.assertEquals(size, ApiMock.expected_resize)
-    return ApiMock.expected_resize
-end
-function ApiMock.nvim_get_current_win()
-    return 999
-end
-function ApiMock:expectedSwitchWindows(jumps)
-    -- boing boing
-    self.win_jumps = jumps
-end
-
-function ApiMock.nvim_set_current_win(win)
-    unit.assertEquals(win, ApiMock.win_jumps[1])
-    table.remove(ApiMock.win_jumps, 1)
-end
-
--- mock: buffer
-local BufferMock = {}
-function BufferMock:new(buf_id)
-    local b = {}
-    setmetatable(b, { __index = self })
-    b.buf_id = buf_id
-    return b
-end
-function BufferMock:getId()
-    return self.buf_id
-end
-
-vim = { api = ApiMock }
-local Window = require '../../lua/nvim-git-blame/window'
-
 TestWindow = {}
 
-function TestWindow.TestProperties()
-    ApiMock.current_win_id = 1005
-    ApiMock:pretendWindowSize(1005, 50)
-    local buf = BufferMock:new(15)
-    local win = Window:new(1005, buf, true)
-    unit.assertEquals(win:getBufferId(), 15)
-    unit.assertEquals(win:getBuffer(), buf)
-    unit.assertEquals(win:getWidth(), 50)
-    unit.assertEquals(win:getWindowId(), 1005)
-    unit.assertEquals(win:isManaged(), true)
+function TestWindow:setUp()
+    vim = require '../../tests/mock/vim'
+    self.sut = require '../../lua/nvim-git-blame/window'
+    self.buffer = require '../../lua/nvim-git-blame/buffer'
+    self.window = require '../../lua/nvim-git-blame/window'
 end
 
-function TestWindow.TestResize()
-    ApiMock.current_win_id = 1006
-    local buf = BufferMock:new(16)
-    local win = Window:new(1006, buf, true)
-    win:setWidth(48)
-    ApiMock:setExpectedResize(48)
+function TestWindow.tearDown()
+    vim.tearDown()
+end
+
+function TestWindow:TestProperties()
+    vim.api.expectWinGetWidth(1000, 50)
+    local buf = self.buffer:new(3)
+    local win = self.window:new(1000, buf, true)
+    unit.assertEquals(win:getBufferId(), 3)
+    unit.assertEquals(win:getBuffer(), buf)
+    unit.assertEquals(win:getWidth(), 50)
+    unit.assertEquals(win:getWindowId(), 1000)
+    unit.assertEquals(win:isManaged(), true)
+    win:setWidth(35)
+    unit.assertEquals(win.width, 35)
+end
+
+function TestWindow:TestVerticalResize()
+    vim.api.expectWinSetWidth(1004, 20)
+    local buf = self.buffer:new(4)
+    local win = self.window:new(1004, buf, true)
+    win:setWidth(20)
     win:verticalResize()
+end
+
+function TestWindow:TestScrollbind()
+    vim.api.expectWinGetCurrent(1002)
+    vim.api.expectWinSetCurrent(1000)
+    vim.expectCmd("set scrollbind")
+    vim.api.expectWinSetCurrent(1002)
+    local win = self.window:new(1000)
+    win:scrollBind(true)
+    vim.api.expectWinGetCurrent(1015)
+    vim.api.expectWinSetCurrent(1000)
+    vim.expectCmd("set noscrollbind")
+    vim.api.expectWinSetCurrent(1015)
+    win:scrollBind(false)
+end
+
+
+function TestWindow:TestReadonly()
+    vim.api.expectWinGetCurrent(1002)
+    vim.api.expectWinSetCurrent(1000)
+    vim.expectCmd("set readonly")
+    vim.api.expectWinSetCurrent(1002)
+    local win = self.window:new(1000)
+    win:readonly(true)
+    vim.api.expectWinGetCurrent(1015)
+    vim.api.expectWinSetCurrent(1000)
+    vim.expectCmd("set noreadonly")
+    vim.api.expectWinSetCurrent(1015)
+    win:readonly(false)
 end

@@ -1,7 +1,7 @@
 _G._TEST = true
 
 -- search *.lua files
-local handle = io.popen('find tests -type f -name "*.lua"')
+local handle = io.popen('find tests/nvim-git-blame -type f -name "*.lua"')
 local out = handle:read('*a')
 handle:close()
 
