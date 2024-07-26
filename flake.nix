@@ -22,7 +22,7 @@
             alias was="git status --short"
             alias lint="luacheck --config .luacheckrc ."
             alias test="lua tests/init.lua -v"
-            export PS1="֍ \u:dev-shell → "
+            export PS1="\e[31m֍\e[0m \u::\W → "
           '';
       };
     };
