@@ -19,18 +19,8 @@ function Git.blame(filename)
     return blames
 end
 
-function Git.isGit()
-    local handle = Git._io.popen('git status 1>/dev/null 2>/dev/null; echo $?', 'r')
-    local output = handle:read('*a')
-    handle:close()
-    if '0\n' == output then
-        return true
-    end
-    return false
-end
-
-function Git.isFile(filepath)
-    local handle = Git._io.popen('head ' .. filepath .. ' 1>/dev/null 2>/dev/null; echo $?', 'r')
+function Git.isGit(filepath)
+    local handle = Git._io.popen('git blame ' .. filepath .. ' 1>/dev/null 2>/dev/null; echo $?', 'r')
     local output = handle:read('*a')
     handle:close()
     if '0\n' == output then

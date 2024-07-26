@@ -26,7 +26,5 @@ On Debian
 
 # TODO
 - testing: write a good mock for vim.api
-- rewrite tests
-- blame unversioned file
 - check buffer is written before "git blame filename"
 

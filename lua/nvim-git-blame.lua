@@ -18,12 +18,8 @@ end
 local function open()
     local current_buffer = api.nvim_get_current_buf()
     local file = api.nvim_buf_get_name(current_buffer)
-    if false == git.isFile(file) then
-        print('file not found')
-        return
-    end
-    if false == git.isGit() then
-        print('not a git repository')
+    if false == git.isGit(file) then
+        print('could not: git blame ' .. file)
         return
     end
     local code_buffer = Buffer:new(current_buffer)
@@ -96,12 +92,8 @@ api.nvim_create_autocmd({'BufWritePost'}, {
         for _, pair in pairs(WindowManager:getAll()) do
             if pair:hasBufferId(ev.buf) then
                 local file = api.nvim_buf_get_name(pair:getUnmanagedWindow():getBufferId())
-                if false == git.isFile(file) then
-                    print('file not found')
-                    return
-                end
-                if false == git.isGit() then
-                    print('not a git repository')
+                if false == git.isGit(file) then
+                    print('could not: git blame ' .. file)
                     return
                 end
                 local buf = BlameBuffer:create(git.blame(file))
