@@ -2,15 +2,33 @@ local unit = require 'luaunit'
 
 local Window = {}
 
-function Window:new(win, is_blame_window)
+function Window:new(win, buf, is_blame_window)
     local w = {}
     setmetatable(w, { __index = self })
     w.managed = is_blame_window
     w.win = win
+    w.width = 50
+    w.buf = buf
     w.asserts = {
         scrollbind = {}
     }
     return w
+end
+
+function Window:getBuffer()
+    return self.buf
+end
+
+function Window:getBufferId()
+    return self.buf:getId()
+end
+
+function Window:setWidth(width)
+    self.width = width
+end
+
+function Window:getWidth()
+    return self.width
 end
 
 function Window:tearDown()
@@ -35,7 +53,7 @@ function Window:expectScrollBind(bind)
 end
 
 function Window:scrollBind(bind)
-    unit.assertEquals(self.asserts.scrollbind[1], bind)
+    unit.assertEquals(bind, self.asserts.scrollbind[1])
     table.remove(self.asserts.scrollbind, 1)
 end
 

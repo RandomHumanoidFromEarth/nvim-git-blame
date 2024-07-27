@@ -8,7 +8,7 @@ local Vim = {
 
 function Vim.tearDown()
     Vim.api.tearDown()
-    unit.assertEquals(Vim.count(Vim.asserts.cmd), 0)
+    unit.assertEquals(0, Vim.count(Vim.asserts.cmd))
     Vim.asserts = {
         cmd = {},
     }

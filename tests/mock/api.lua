@@ -53,9 +53,9 @@ function Api.expectSetCursor(win, pos)
 end
 
 function Api.nvim_win_set_cursor(win, pos)
-    unit.assertEquals(Api.asserts.set_cursor[1], win)
-    unit.assertEquals(Api.asserts.set_cursor[2][1], pos[1])
-    unit.assertEquals(Api.asserts.set_cursor[2][1], pos[2])
+    unit.assertEquals(win, Api.asserts.set_cursor[1][1])
+    unit.assertEquals(pos[1], Api.asserts.set_cursor[1][2][1])
+    unit.assertEquals(pos[2], Api.asserts.set_cursor[1][2][2])
     table.remove(Api.asserts.set_cursor, 1)
 end
 
