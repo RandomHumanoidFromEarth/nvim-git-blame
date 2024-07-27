@@ -1,15 +1,15 @@
 local unit = require 'luaunit'
-TestWindowManager = {}
+TestWindowPairList = {}
 
-function TestWindowManager:setUp()
+function TestWindowPairList:setUp()
     vim = require '../../tests/mock/vim'
-    self.sut = require '../../lua/nvim-git-blame/window-manager'
+    self.sut = require '../../lua/nvim-git-blame/window-pair-list'
     self.window = require '../../lua/nvim-git-blame/window'
     self.pair = require '../../lua/nvim-git-blame/window-pair'
     self.buffer= require '../../lua/nvim-git-blame/buffer'
 end
 
-function TestWindowManager:TestAddAndRemovePairs()
+function TestWindowPairList:TestAddAndRemovePairs()
     local pair_1_win_1 = self.window:new(1000, self.buffer:new(1))
     local pair_1_win_2 = self.window:new(1001, self.buffer:new(2))
     local pair_1 = self.pair:new(pair_1_win_1, pair_1_win_2)
@@ -57,7 +57,7 @@ function TestWindowManager:TestAddAndRemovePairs()
     unit.assertNil(self.sut:getPairByBufferId(4))
 end
 
-function TestWindowManager:TestWindowExists()
+function TestWindowPairList:TestWindowExists()
     vim.api.expectListWins({1001, 1002, 1004, 1005})
     vim.api.expectListWins({1001, 1002, 1004, 1005})
     unit.assertTrue(self.sut.windowExists(1001))
