@@ -67,7 +67,7 @@ api.nvim_create_autocmd({'BufEnter'}, {
             if false == WindowPairList.windowExists(pair:getManagedWindow():getWindowId()) then
                 pair:getUnmanagedWindow():scrollBind(false)
                 local b_buf = pair:getManagedWindow():getBufferId()
-                vim.cmd.bdelete(b_buf)
+                vim.cmd("bdelete " .. b_buf)
                 WindowPairList:removePairByWindowId(pair:getManagedWindow():getWindowId())
                 return
             end
@@ -101,7 +101,7 @@ api.nvim_create_autocmd({'BufWritePost'}, {
                 local old_buf = window_blame:getBuffer():getId()
                 window_blame:setBuffer(Buffer:new(buf:getBuffer()))
                 api.nvim_win_set_buf(window_blame:getWindowId(), buf:getBuffer())
-                vim.cmd.bdelete(old_buf)
+                vim.cmd("bdelete " .. old_buf)
                 window_blame:setWidth(buf:getMaxLen() + 5)
                 window_blame:verticalResize()
                 pair:addEmptyLinesToBlameBuffer()
