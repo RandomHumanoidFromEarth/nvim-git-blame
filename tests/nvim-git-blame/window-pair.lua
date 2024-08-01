@@ -69,5 +69,3 @@ function TestWindowPair:TestAddEmptyLinesToBlameBuffer()
     blame_buf:tearDown()
 end
 
-function TestWindowPair:test
-
