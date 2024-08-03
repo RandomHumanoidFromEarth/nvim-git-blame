@@ -65,5 +65,16 @@ local current = api.nvim_get_current_win()
     api.nvim_set_current_win(current)
 end
 
+function Window:isModified()
+    local current_win = api.nvim_get_current_win()
+    api.nvim_set_current_win(self.win)
+    local is_modified = false
+    if vim.o.modified then
+        is_modified = true
+    end
+    api.nvim_set_current_win(current_win)
+    return is_modified
+end
+
 return Window
 

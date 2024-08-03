@@ -28,7 +28,7 @@ function WindowPair:addEmptyLinesToBlameBuffer()
     local blame_buf_new = {}
     for index, line in pairs(code_buf:getLines()) do
         table.insert(blame_buf_new, blame_buf:getLine(index))
-        local wrapped = (string.len(line) / self:getUnmanagedWindow():getWidth()) - 1
+        local wrapped = ((string.len(line) + 6) / self:getUnmanagedWindow():getWidth()) - 1
         if wrapped > 0 then
             for _=0, wrapped do
                 table.insert(blame_buf_new, '')

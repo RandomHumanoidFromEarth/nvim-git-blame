@@ -62,3 +62,14 @@ function TestWindow:TestReadonly()
     vim.api.expectWinSetCurrent(1015)
     win:readonly(false)
 end
+
+function TestWindow:TestIsModified()
+    vim.api.expectWinGetCurrent(1015)
+    vim.api.expectWinSetCurrent(1000)
+    vim.api.expectWinSetCurrent(1015)
+    vim.setModified(true)
+    local buf = self.buffer:new(1)
+    local win = self.window:new(1000, buf, true)
+    unit.assertEquals(true, win:isModified())
+end
+

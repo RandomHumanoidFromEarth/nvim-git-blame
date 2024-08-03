@@ -4,6 +4,7 @@ local Vim = {
     asserts = {
         cmd = {}
     },
+    o = {}, -- options
 }
 
 function Vim.tearDown()
@@ -12,6 +13,10 @@ function Vim.tearDown()
     Vim.asserts = {
         cmd = {},
     }
+end
+
+function Vim.setModified(mod)
+    Vim.o.modified = mod
 end
 
 function Vim.count(table)

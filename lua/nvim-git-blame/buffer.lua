@@ -22,3 +22,4 @@ function Buffer:getLines()
 end
 
 return Buffer
+

@@ -19,11 +19,15 @@ local function open()
     local current_buffer = api.nvim_get_current_buf()
     local file = api.nvim_buf_get_name(current_buffer)
     if false == git.isGit(file) then
-        print('could not: git blame ' .. file)
+        print('could not git-blame ' .. file)
         return
     end
     local code_buffer = Buffer:new(current_buffer)
     local window_code = Window:new(api.nvim_get_current_win(), code_buffer, false)
+    if window_code:isModified() then
+        print("buffer is not written to file")
+        return
+    end
     vim.cmd('vsplit')
     local buf = BlameBuffer:create(git.blame(file))
     local window_blame = Window:new(api.nvim_get_current_win(), Buffer:new(buf:getBuffer()), true)
@@ -93,7 +97,7 @@ api.nvim_create_autocmd({'BufWritePost'}, {
             if pair:hasBufferId(ev.buf) then
                 local file = api.nvim_buf_get_name(pair:getUnmanagedWindow():getBufferId())
                 if false == git.isGit(file) then
-                    print('could not: git blame ' .. file)
+                    print('could not git-blame ' .. file)
                     return
                 end
                 local buf = BlameBuffer:create(git.blame(file))

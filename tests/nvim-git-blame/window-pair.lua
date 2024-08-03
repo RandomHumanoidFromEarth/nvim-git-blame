@@ -55,7 +55,7 @@ function TestWindowPair:TestAddEmptyLinesToBlameBuffer()
     blame_buf:expectGetLine(2, "second blame")
     blame_buf:expectGetLine(3, "third blame")
     local code_win = self.window:new(1000, code_buf, false)
-    code_win:setWidth(10)
+    code_win:setWidth(16)
     local blame_win = self.window:new(1001, blame_buf, true)
     local pair = self.sut:new(code_win, blame_win)
     vim.api.expectBufSetLines(2, 0, -1, true, {
