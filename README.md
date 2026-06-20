@@ -1,7 +1,6 @@
 # nvim-git-blame
 This plugin opens a simple git blame in split view.<br/>
-Good for getting started with lua and nvim-plugins.<br/>
-Open for improvements and contributions.
+Me getting started with lua and nvim-plugins.
 
 ### Installation with Packer
 ```
